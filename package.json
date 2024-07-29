@@ -1,0 +1,23 @@
+{
+  "name": "@sekai-lab",
+  "version": "0.0.0",
+  "description": "The Monorepo contain utils and packages for sekai labs",
+  "repository": "https://github.com/sekai-labs/sekai",
+  "author": "@AnataAria",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "tsc"
+  },
+  "workspaces":[
+    "packages/*"
+  ],
+  "resolutions": {
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.3",
+    "ts-node": "^10.9.2"
+  }
+}
