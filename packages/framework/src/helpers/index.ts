@@ -1,1 +1,2 @@
-export * from './config.js';
+export * from './config-loader.js';
+export * from './default-config.js'
