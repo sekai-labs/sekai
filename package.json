@@ -5,7 +5,7 @@
   "repository": "https://github.com/sekai-labs/sekai",
   "author": "@AnataAria",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "build": "tsc",
     "publish::framework": "cd ./packages/framework && yarn publish",

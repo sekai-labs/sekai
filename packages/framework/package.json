@@ -8,10 +8,13 @@
   "author": "@AnataAria",
   "license": "MIT",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "yarn build",
-    "publish": "yarn publish --provenance --access public"
+    "publish": "yarn publish"
   },
   "dependencies": {
     "@types/node": "^22.0.0",
