@@ -2,8 +2,8 @@ import 'dotenv/config'
 import {Schema, ValidationResult} from 'joi';
 
 export type TValidator = Record <string, Schema>;
-type TEnvKeyMap<Type> = {
-    [Property in keyof Type ]: string;
+type TEnvKeyMap<DataType> = {
+    [Property in keyof DataType ]: string;
 }
 export class ConfigLoader<T extends {}> {
     private env: TEnvKeyMap<T> = {} as TEnvKeyMap<T>;
@@ -27,10 +27,10 @@ export class ConfigLoader<T extends {}> {
     }
 
     public get config () {
-        return new Proxy (this, {
+        return new Proxy (this.env, {
             get:(target, prop: string | symbol) => {
                 if (prop in target) {
-                    this.env[prop as keyof T]
+                    return target[prop as keyof T];
                 } else {
                     throw new Error (`Can't get the env value because it don't existed`);
                 }
@@ -38,4 +38,3 @@ export class ConfigLoader<T extends {}> {
         })
     }
 }
-export default ConfigLoader;
