@@ -2,9 +2,6 @@ name: Publish Package
 on:
   release:
     types: [published]
-  pull_request: 
-    branches: 
-      - main
 jobs:
   publish-package:
     runs-on: ubuntu-latest
