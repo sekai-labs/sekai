@@ -9,17 +9,21 @@ export class ConfigLoader<T extends {}> {
     private env: TEnvKeyMap<T> = {} as TEnvKeyMap<T>;
     constructor (validators: TValidator, postProcess?: (env: TEnvKeyMap<T>) => TEnvKeyMap<T>) {
         const envList = process.env;
+        const validatorList = Object.entries(validators);
         if (envList) {
             throw new Error ('Can not load the config');
         }
-        for(const [key, validator] of Object.entries(validators)) {
+        for(const [key, validator] of validatorList) {
+            const {value, error}: ValidationResult = validator.validate(envList[key]);
             if (envList[key]) {
-                const {value, error}: ValidationResult = validator.validate(envList[key]);
                 if (error) {
                     throw error;
                 }
                 this.env[key as keyof T] = value;
+            } else if (error && typeof value !== 'undefined') {
+                throw error;
             }
+            this.env[key as keyof T] = '';
         }
         if (postProcess) {
             this.env = postProcess(this.env);
@@ -35,6 +39,6 @@ export class ConfigLoader<T extends {}> {
                     throw new Error (`Can't get the env value because it don't existed`);
                 }
             }
-        })
+        });
     }
 }
