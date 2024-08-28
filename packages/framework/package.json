@@ -1,6 +1,6 @@
 {
   "name": "@sekai-labs/framework",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Framework for sekai-lab written by typescripts",
   "type": "module",
   "module": "./build/src/index.js",

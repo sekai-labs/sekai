@@ -1,7 +1,6 @@
 import { Knex } from "knex";
 import { Connector } from "./connector.js";
 
-
 export class BaseModel <T extends {}> {
     public tableName: string;
     public knexInstance: Knex;
@@ -17,3 +16,5 @@ export class BaseModel <T extends {}> {
         return this.knex<T,T[]>(this.tableName);
     }
 }
+
+export default BaseModel;

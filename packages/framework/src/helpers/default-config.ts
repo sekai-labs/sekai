@@ -12,3 +12,5 @@ export class DefaultConfig {
         return databasePort;
     }
 }
+
+export default DefaultConfig;

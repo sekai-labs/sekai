@@ -57,3 +57,5 @@ export class RedisDatabase {
         }
     }
 }
+
+export default RedisDatabase;

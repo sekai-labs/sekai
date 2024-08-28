@@ -42,3 +42,5 @@ export class ConfigLoader<T extends {}> {
         });
     }
 }
+
+export default ConfigLoader;
