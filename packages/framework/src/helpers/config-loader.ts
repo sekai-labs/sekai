@@ -1,29 +1,39 @@
-import 'dotenv/config'
+import { config, DotenvConfigOptions } from 'dotenv';
 import {Schema, ValidationResult} from 'joi';
 
+// Type Validator
 export type TValidator = Record <string, Schema>;
+
+type TEnvKeyType<DataType, K extends keyof DataType> = DataType[K];
+
 type TEnvKeyMap<DataType> = {
-    [Property in keyof DataType ]: string;
+    [Property in keyof DataType ]: TEnvKeyType<DataType, Property>;
 }
+
+const envConfigOptionLoader = (option?: DotenvConfigOptions): void => {
+    if (option) {
+        config(option);
+    }
+    config();
+}
+
 export class ConfigLoader<T extends {}> {
     private env: TEnvKeyMap<T> = {} as TEnvKeyMap<T>;
     constructor (validators: TValidator, postProcess?: (env: TEnvKeyMap<T>) => TEnvKeyMap<T>) {
-        const envList = process.env;
+        envConfigOptionLoader();
+        const envList = process?.env;
         const validatorList = Object.entries(validators);
-        if (envList) {
-            throw new Error ('Can not load the config');
+        if (!envList) {
+            throw new Error (`Can't load config`);
         }
         for(const [key, validator] of validatorList) {
-            const {value, error}: ValidationResult = validator.validate(envList[key]);
-            if (envList[key]) {
-                if (error) {
-                    throw error;
-                }
-                this.env[key as keyof T] = value;
-            } else if (error && typeof value !== 'undefined') {
+            const envItem = envList[key];
+            const {value, error}: ValidationResult = validator.validate(envItem);
+            if (error) {
                 throw error;
             }
-            this.env[key as keyof T] = '';
+            this.env[key as keyof T] = value;
+            console.log('Add ENV with name %s: Success \n');
         }
         if (postProcess) {
             this.env = postProcess(this.env);
@@ -32,9 +42,9 @@ export class ConfigLoader<T extends {}> {
 
     public get config () {
         return new Proxy (this.env, {
-            get:(target, prop: string | symbol) => {
+            get:<K extends keyof T>(target: T, prop: string | symbol) => {
                 if (prop in target) {
-                    return target[prop as keyof T];
+                    return target[prop as K];
                 } else {
                     throw new Error (`Can't get the env value because it don't existed`);
                 }
