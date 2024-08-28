@@ -1,4 +1,4 @@
-import {createClient} from 'redis';
+import {createClient, RedisClientOptions, RedisClientType} from 'redis';
 
 export type TRedisConnectionConfig  = {
     username: string;
@@ -8,19 +8,19 @@ export type TRedisConnectionConfig  = {
 }
 
 export class RedisDatabase {
-    private static redisInstance: {[instanceName: string]: any} = {}
+    private static redisInstance: {[instanceName: string]: RedisClientType<any>} = {};
     
-    public static connect(instanceName: string = 'redis-default', config?: TRedisConnectionConfig) {
+    public static async connect(instanceName: string = 'redis-default', config?: TRedisConnectionConfig) {
         if(!this.redisInstance[instanceName] && config) {
-            this.redisInstance[instanceName] = this.initConnection(config);
+            this.redisInstance[instanceName] = await this.initConnection(config);
         }else {
             return this.redisInstance[instanceName];
         }
         throw new Error('This connection is not valid');
     }
 
-    public static initConnection(config: TRedisConnectionConfig) {
-        const connect = createClient({
+    public static async initConnection(config: TRedisConnectionConfig, errorHandler?: (err:any) => void): Promise<RedisClientType<any>> {
+        const configRedis: RedisClientOptions = {
             username: config.username,
             password: config.password,
             socket: {
@@ -36,7 +36,14 @@ export class RedisDatabase {
                 },
                 connectTimeout: 3000
             },
-        });
+        };
+        const connect = createClient(configRedis) as RedisClientType<any>;
+        if (errorHandler) {
+            connect.on('error', (error) => errorHandler(error));
+        } else {
+            connect.on('error', (err) => console.log('Redis Client Error', err));
+        }
+        await connect.connect();
         return connect;
     }
 
