@@ -5,9 +5,6 @@
     "rootDir": ".",
     "composite": true,
     "baseUrl": "./src",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
   },
   "exclude": ["node_modules", "./build"],
   "include": ["./src"],
