@@ -29,6 +29,6 @@ export class Connector {
             }
         }
     }
-
-
 }
+
+export default Connector;
