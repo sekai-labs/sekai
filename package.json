@@ -7,7 +7,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "publish::framework": "cd ./packages/framework && yarn publish",
+    "publish::utils": "cd ./packages/utils && yarn publish"
   },
   "workspaces": [
     "packages/*"
